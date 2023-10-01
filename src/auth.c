@@ -136,3 +136,21 @@ void registerMenu(char a[50], char pass[50]) {
 
   fclose(fp);
 }
+
+void handleFailedLogin(struct User *u) {
+  int option;
+  do {
+    printf("\n\t\tEnter 0 to try again, 1 to exit! \n\n");
+    scanf("%d", &option);
+
+    if (option == 0) {
+      initMenu(u); 
+      break;
+    } else if (option == 1) {
+      exit(1); 
+      break;
+    } else {
+      printf("Insert a valid operation!\n");
+    }
+  } while (option < 0 || option > 1);
+}

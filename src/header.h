@@ -27,6 +27,7 @@ struct User {
 };
 
 // authentication functions
+void initMenu(struct User *u);
 void loginMenu(char a[50], char pass[50]);
 void registerMenu(char a[50], char pass[50]);
 const char *getPassword(struct User u);
@@ -40,3 +41,4 @@ void checkAccountDetails(struct User u);
 void makeTransaction(struct User u);
 void removeAccount(struct User u);
 void transferOwnership(struct User u);
+void handleFailedLogin(struct User *u);

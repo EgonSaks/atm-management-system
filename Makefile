@@ -8,7 +8,7 @@ CFLAGS = -Wall -Wextra
 SOURCES = $(wildcard src/*.c)
 
 # Output binary
-OUT = program
+OUT = atm_system
 
 all: $(OUT)
 

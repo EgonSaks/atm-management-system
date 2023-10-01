@@ -85,7 +85,7 @@ int getUserId(const char *username) {
   }
 
   fclose(fp);
-  printf("\n\t\tUser not found!\n");
+  printf("\n\t\tUser not found!\n\n");
   exit(1);
 }
 
@@ -457,4 +457,76 @@ void removeAccount(struct User u) {
 
   printf("\n\t\tAccount removed successfully.\n");
   success(u);
+}
+
+void transferOwnership(struct User u) {
+  int accountNbr, newUserId;
+  char newUserName[50];
+  struct Record records[MAX_RECORDS];
+  int recordCount = 0;
+
+  system("clear");
+  printf("\t\t====== Transfer Ownership for %s =====\n\n", u.name);
+  printf("\n\t\tEnter the account number you want to transfer: ");
+  scanf("%d", &accountNbr);
+
+  FILE *pf = fopen(RECORDS, "r");
+  if (pf == NULL) {
+    perror("\n\t\tFailed to open file");
+    return;
+  }
+
+  int hasAccounts = 0;
+  while (getAccountFromFile(pf, records[recordCount].name,
+                            &records[recordCount])) {
+    if (strcmp(records[recordCount].name, u.name) == 0) {
+      hasAccounts = 1;
+    }
+    recordCount++;
+  }
+  fclose(pf);
+
+  if (!hasAccounts) {
+    printf("\n\t\tYou have no accounts to transfer.\n");
+    stayOrReturn(0, transferOwnership, u);
+    return;
+  }
+
+  int found = 0;
+  for (int i = 0; i < recordCount; i++) {
+    if (records[i].accountNbr == accountNbr &&
+        strcmp(records[i].name, u.name) == 0) {
+      found = 1;
+
+      printf("\n\t\tEnter the username of the new owner: ");
+      scanf("%s", newUserName);
+      newUserId = getUserId(newUserName);
+
+      records[i].userId = newUserId;
+      strcpy(records[i].name, newUserName);
+      strcpy(records[i].country, "N/A");
+      records[i].phone = 0;
+
+      break;
+    }
+  }
+
+  pf = fopen(RECORDS, "w");
+  if (pf == NULL) {
+    perror("\n\t\tFailed to open file");
+    return;
+  }
+
+  for (int i = 0; i < recordCount; i++) {
+    updateUserAccountInFile(pf, records[i]);
+  }
+  fclose(pf);
+
+  if (found) {
+    printf("\n\t\tOwnership successfully transferred.\n");
+    success(u);
+  } else {
+    printf("\n\t\tNo account found with account number %d.\n", accountNbr);
+    stayOrReturn(0, transferOwnership, u);
+  }
 }

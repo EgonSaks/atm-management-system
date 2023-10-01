@@ -3,7 +3,8 @@
 void mainMenu(struct User u) {
   int option;
   system("clear");
-  printf("\n\n\t\t======= ATM =======\n\n");
+  printf("\n\n\t\t======= ATM =======\n");
+  printf("\n\t\tWelcome %s\n\n", u.name);
   printf("\n\t\t-->> Feel free to choose one of the options below <<--\n");
   printf("\n\t\t[1]- Create a new account\n");
   printf("\n\t\t[2]- Update account information\n");
@@ -35,8 +36,7 @@ void mainMenu(struct User u) {
     removeAccount(u);
     break;
   case 7:
-    // student TODO : add your **Transfer owner** function
-    // here
+    transferOwnership(u);
     break;
   case 8:
     exit(1);
@@ -61,7 +61,6 @@ void initMenu(struct User *u) {
     case 1:
       loginMenu(u->name, u->password);
       if (strcmp(u->password, getPassword(*u)) == 0) {
-        printf("\n\t\tPassword Match!");
       } else {
         printf("\n\t\tWrong password or username\n");
         exit(1);

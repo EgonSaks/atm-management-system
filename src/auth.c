@@ -79,7 +79,7 @@ void registerMenu(char a[50], char pass[50]) {
 
   system("clear");
   do {
-    printf("\n\n\t\tBank Management System\n\t\tUser Registration\n\n\t\tEnter Username: ");
+    printf("\n\n\t\tBank Management System\n\t\t  User Registration\n\n\t\tEnter Username: ");
 
     scanf("%s", a);
     if (!isUsernameUnique(a)) {

@@ -209,16 +209,13 @@ void updateAccountInformation(struct User u) {
   int accountNbr, choice;
   char newCountry[50];
   int newPhoneNumber;
+  int found = 0;
 
   system("clear");
 
   printf("\t\t====== Update accounts for %s =====\n\n", u.name);
   printf("\n\t\tEnter the account number you wish to update: ");
   scanf("%d", &accountNbr);
-
-  printf("\n\t\tWhich field do you want to update?\n\n\t\t 1. Phone "
-         "number\n\n\t\t 2. Country\n\n\t\tEnter choice (1/2): ");
-  scanf("%d", &choice);
 
   struct Record records[MAX_RECORDS];
   int recordCount = 0;
@@ -231,33 +228,49 @@ void updateAccountInformation(struct User u) {
 
   while (getAccountFromFile(pf, records[recordCount].name,
                             &records[recordCount])) {
+    if (records[recordCount].accountNbr == accountNbr &&
+        strcmp(records[recordCount].name, u.name) == 0) {
+      found = 1;
+    }
     recordCount++;
   }
   fclose(pf);
 
-  int found = 0;
-  for (int i = 0; i < recordCount; i++) {
-    if (records[i].accountNbr == accountNbr &&
-        strcmp(records[i].name, u.name) == 0) {
-      found = 1;
-      switch (choice) {
-      case 1:
-        printf("\n\t\tEnter new phone number: ");
-        scanf("%d", &newPhoneNumber);
+  if (!found) {
+    printf("\n\t\tNo account found with account number %d.\n", accountNbr);
+    stayOrReturn(0, updateAccountInformation, u);
+    return;
+  }
+
+  printf("\n\t\tWhich field do you want to update?\n\n\t\t 1. Phone "
+         "number\n\n\t\t 2. Country\n\n\t\tEnter choice (1/2): ");
+  scanf("%d", &choice);
+
+  switch (choice) {
+  case 1:
+    printf("\n\t\tEnter new phone number: ");
+    scanf("%d", &newPhoneNumber);
+    for (int i = 0; i < recordCount; i++) {
+      if (records[i].accountNbr == accountNbr &&
+          strcmp(records[i].name, u.name) == 0) {
         records[i].phone = newPhoneNumber;
-        break;
-      case 2:
-        printf("\n\t\tEnter new country: ");
-        scanf("%s", newCountry);
-        strcpy(records[i].country, newCountry);
-        break;
-      default:
-        printf("\n\t\tInvalid choice. Returning to main menu.\n");
-        mainMenu(u);
-        return;
       }
-      break;
     }
+    break;
+  case 2:
+    printf("\n\t\tEnter new country: ");
+    scanf("%s", newCountry);
+    for (int i = 0; i < recordCount; i++) {
+      if (records[i].accountNbr == accountNbr &&
+          strcmp(records[i].name, u.name) == 0) {
+        strcpy(records[i].country, newCountry);
+      }
+    }
+    break;
+  default:
+    printf("\n\t\tInvalid choice. Returning to main menu.\n");
+    mainMenu(u);
+    return;
   }
 
   pf = fopen(RECORDS, "w");
@@ -271,13 +284,8 @@ void updateAccountInformation(struct User u) {
   }
   fclose(pf);
 
-  if (found) {
-    printf("\n\t\tAccount information updated successfully.\n");
-    success(u);
-  } else {
-    printf("\n\t\tNo account found with account number %d.\n", accountNbr);
-    stayOrReturn(0, updateAccountInformation, u);
-  }
+  printf("\n\t\tAccount information updated successfully.\n");
+  success(u);
 }
 
 void checkAccountDetails(struct User u) {

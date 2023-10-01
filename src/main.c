@@ -4,7 +4,8 @@ void mainMenu(struct User u) {
   int option;
   system("clear");
   printf("\n\n\t\t======= ATM =======\n");
-  printf("\n\t\t-->> Feel free to choose one of the options below, %s <<--\n", u.name);
+  printf("\n\t\t-->> Feel free to choose one of the options below, %s <<--\n",
+         u.name);
   printf("\n\t\t[1]- Create a new account\n");
   printf("\n\t\t[2]- Update account information\n");
   printf("\n\t\t[3]- Check accounts\n");
@@ -61,7 +62,7 @@ void initMenu(struct User *u) {
       loginMenu(u->name, u->password);
       if (strcmp(u->password, getPassword(*u)) == 0) {
       } else {
-        printf("\n\t\tWrong password or username\n");
+        printf("\n\t\tWrong password or username\n\n");
         exit(1);
       }
       r = 1;

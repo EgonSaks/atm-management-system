@@ -43,5 +43,3 @@ For demonstration purposes, several user accounts have been pre-registered:
 
 - **Username**: Alice | **Password**: q1w2e3r4t5y6
 - **Username**: Michel | **Password**: q1w2e3r4t5y6
-- **Username**: Egon | **Password**: 123
-- **Username**: Cristina | **Password**: 123

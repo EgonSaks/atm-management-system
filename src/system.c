@@ -153,13 +153,15 @@ noAccount:
 void checkAllAccounts(struct User u) {
   char userName[100];
   struct Record r;
+  int accountsFound = 0;
 
   FILE *pf = fopen(RECORDS, "r");
 
   system("clear");
-  printf("\t\t====== All accounts from user, %s =====\n\n", u.name);
+  printf("\t\t====== All accounts for %s =====\n\n", u.name);
   while (getAccountFromFile(pf, userName, &r)) {
     if (strcmp(userName, u.name) == 0) {
+      accountsFound = 1;
       printf("\t\t_____________________\n");
       printf(
           "\n\t\tAccount number: %d\n\t\tDeposit date: %d/%d/%d\n\t\tCountry: "
@@ -169,6 +171,11 @@ void checkAllAccounts(struct User u) {
           r.country, r.phone, r.amount, r.accountType);
     }
   }
+
+  if (accountsFound == 0) {
+    printf("\t\tNo accounts found for %s.\n", u.name);
+  }
+
   fclose(pf);
   success(u);
 }

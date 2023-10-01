@@ -47,3 +47,5 @@ void makeTransaction(struct User u);
 void removeAccount(struct User u);
 void transferOwnership(struct User u);
 void handleFailedLogin(struct User *u);
+void handleFailedRegistration(char a[MAX_USERNAME_SIZE],
+                              char pass[MAX_PASSWORD_SIZE]);

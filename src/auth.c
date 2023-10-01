@@ -3,6 +3,7 @@
 
 #define MAX_USERNAME_SIZE 50
 #define MAX_PASSWORD_SIZE 50
+#define MAX_ID_SIZE 5
 
 char *USERS = "./data/users.txt";
 
@@ -36,7 +37,7 @@ void loginMenu(char a[MAX_USERNAME_SIZE], char pass[MAX_PASSWORD_SIZE]) {
 const char *getPassword(struct User u) {
   FILE *fp;
   struct User userChecker;
-  char id[10];
+  char id[MAX_ID_SIZE];
 
   if ((fp = fopen("./data/users.txt", "r")) == NULL) {
     printf("Error! opening file");
@@ -80,15 +81,17 @@ int isUsernameUnique(char username[]) {
 void registerMenu(char a[MAX_USERNAME_SIZE], char pass[MAX_PASSWORD_SIZE]) {
   struct termios oflags, nflags;
 
-  system("clear");
   do {
-    printf("\n\n\t\tBank Management System\n\t\t  User "
-           "Registration\n\n\t\tEnter Username: ");
-
+    system("clear");
+    printf("\n\n\t\tBank Management System\n\n\t\t  User Registration\n");
+    printf("\n\n\t\tEnter Username: ");
     scanf("%s", a);
+
     if (!isUsernameUnique(a)) {
       system("clear");
-      printf("\n\n\t\tUsername already exists. Please try again.\n");
+      printf("\n\n\t\tBank Management System\n\n\t\t  User Registration\n");
+      printf("\n\t\tUsername already exists. \n");
+      handleFailedRegistration(a, pass);
     }
   } while (!isUsernameUnique(a));
 
@@ -113,7 +116,7 @@ void registerMenu(char a[MAX_USERNAME_SIZE], char pass[MAX_PASSWORD_SIZE]) {
 
   FILE *fp;
   struct User userChecker;
-  char id[5];
+  char id[MAX_ID_SIZE];
   int lastUserID = 0;
 
   if ((fp = fopen("./data/users.txt", "r")) == NULL) {
@@ -154,6 +157,24 @@ void handleFailedLogin(struct User *u) {
       break;
     } else {
       printf("Insert a valid operation!\n");
+    }
+  } while (option < 0 || option > 1);
+}
+
+void handleFailedRegistration(char a[MAX_USERNAME_SIZE],
+                              char pass[MAX_PASSWORD_SIZE]) {
+  int option;
+  do {
+    printf("\n\t\tEnter 0 to try again, 1 to exit!\n\n");
+    scanf("%d", &option);
+    if (option == 0) {
+      registerMenu(a, pass);
+      break;
+    } else if (option == 1) {
+      exit(1);
+      break;
+    } else {
+      printf("\t\tInsert a valid operation!\n");
     }
   } while (option < 0 || option > 1);
 }

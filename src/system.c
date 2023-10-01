@@ -393,3 +393,61 @@ void makeTransaction(struct User u) {
     stayOrReturn(0, makeTransaction, u);
   }
 }
+
+void removeAccount(struct User u) {
+  int accountNbr;
+  system("clear");
+  printf("\t\t====== Remove Account for %s =====\n\n", u.name);
+  printf("\n\t\tEnter the account number you wish to remove: ");
+  scanf("%d", &accountNbr);
+
+  struct Record records[MAX_RECORDS];
+  int recordCount = 0;
+
+  FILE *pf = fopen(RECORDS, "r");
+  if (pf == NULL) {
+    perror("\n\t\tFailed to open file");
+    exit(1);
+  }
+
+  while (getAccountFromFile(pf, records[recordCount].name,
+                            &records[recordCount])) {
+    recordCount++;
+  }
+  fclose(pf);
+
+  int found = 0;
+  for (int i = 0; i < recordCount; i++) {
+    if (records[i].accountNbr == accountNbr &&
+        strcmp(records[i].name, u.name) == 0) {
+      found = 1;
+      for (int j = i; j < recordCount - 1; j++) {
+        records[j] = records[j + 1];
+      }
+      recordCount--;
+      break;
+    }
+  }
+
+  if (!found) {
+    printf("\n\t\tNo account found with account number %d.\n", accountNbr);
+    stayOrReturn(0, removeAccount, u);
+    return;
+  }
+
+  pf = fopen(RECORDS, "w");
+  if (pf == NULL) {
+    perror("\n\t\tFailed to open file");
+    exit(1);
+  }
+
+  int newId = 0;
+  for (int i = 0; i < recordCount; i++) {
+    records[i].id = newId++;
+    updateUserAccountInFile(pf, records[i]);
+  }
+  fclose(pf);
+
+  printf("\n\t\tAccount removed successfully.\n");
+  success(u);
+}

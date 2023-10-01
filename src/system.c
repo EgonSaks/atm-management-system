@@ -51,17 +51,19 @@ void stayOrReturn(int notGood, void f(struct User u), struct User u) {
 void success(struct User u) {
   int option;
 
-invalid:
-  printf("\n\t\tEnter 1 to go to the main menu and 0 to exit! \n\n");
-  scanf("%d", &option);
-  system("clear");
-  if (option == 1) {
-    mainMenu(u);
-  } else if (option == 0) {
-    exit(1);
-  } else {
-    printf("\n\t\tInsert a valid operation!\n");
-    goto invalid;
+  while (1) { 
+    printf("\n\t\tEnter 1 to go to the main menu and 0 to exit! \n\n");
+    scanf("%d", &option);
+    system("clear");
+
+    if (option == 1) {
+      mainMenu(u);
+      break; 
+    } else if (option == 0) {
+      exit(1);
+    } else {
+      printf("\n\t\tInsert a valid operation!\n");
+    }
   }
 }
 
@@ -307,7 +309,7 @@ void updateAccountInformation(struct User u) {
   }
   fclose(pf);
 
-  printf("\n\t\tAccount information updated successfully.\n");
+  printf("\n\t\t✔ Account information updated successfully.\n");
   success(u);
 }
 
@@ -531,7 +533,7 @@ void removeAccount(struct User u) {
   }
   fclose(pf);
 
-  printf("\n\t\tAccount removed successfully.\n");
+  printf("\n\t\t✔ Account removed successfully.\n");
   success(u);
 }
 
@@ -603,6 +605,6 @@ void transferOwnership(struct User u) {
   }
   fclose(pf);
 
-  printf("\n\t\tOwnership successfully transferred.\n");
+  printf("\n\t\t✔ Ownership successfully transferred.\n");
   success(u);
 }

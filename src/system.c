@@ -169,14 +169,26 @@ noAccount:
 }
 
 void checkAllAccounts(struct User u) {
-  char userName[100];
-  struct Record r;
-  int accountsFound = 0;
+  if (!doesUserHaveAccounts(u)) {
+    system("clear");
+    printf("\n\t\tNo accounts found for %s. Returning to main menu.\n", u.name);
+    stayOrReturn(1, checkAllAccounts, u);
+    return;
+  }
 
   FILE *pf = fopen(RECORDS, "r");
+  if (pf == NULL) {
+    perror("\n\t\tFailed to open file");
+    return;
+  }
+
+  int accountsFound = 0;
+  struct Record r;
+  char userName[100];
 
   system("clear");
   printf("\t\t====== All accounts for %s =====\n\n", u.name);
+
   while (getAccountFromFile(pf, userName, &r)) {
     if (strcmp(userName, u.name) == 0) {
       accountsFound = 1;
@@ -190,11 +202,14 @@ void checkAllAccounts(struct User u) {
     }
   }
 
+  fclose(pf);
+
   if (accountsFound == 0) {
     printf("\t\tNo accounts found for %s.\n", u.name);
+    stayOrReturn(1, checkAllAccounts, u);
+    return;
   }
 
-  fclose(pf);
   success(u);
 }
 

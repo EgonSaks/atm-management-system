@@ -93,7 +93,7 @@ int doesUserHaveAccounts(struct User u) {
     perror("\n\t\tFailed to open file");
     return 0;
   }
-  char userName[100];
+  char userName[50];
   while (getAccountFromFile(pf, userName, &r)) {
     if (strcmp(userName, u.name) == 0) {
       fclose(pf);
@@ -193,7 +193,7 @@ void checkAllAccounts(struct User u) {
 
   int accountsFound = 0;
   struct Record r;
-  char userName[100];
+  char userName[50];
 
   system("clear");
   printf("\t\t====== All accounts for %s =====\n\n", u.name);

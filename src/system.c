@@ -89,6 +89,24 @@ int getUserId(const char *username) {
   exit(1);
 }
 
+int doesUserHaveAccounts(struct User u) {
+  struct Record r;
+  FILE *pf = fopen(RECORDS, "r");
+  if (pf == NULL) {
+    perror("\n\t\tFailed to open file");
+    return 0;
+  }
+  char userName[100];
+  while (getAccountFromFile(pf, userName, &r)) {
+    if (strcmp(userName, u.name) == 0) {
+      fclose(pf);
+      return 1;
+    }
+  }
+  fclose(pf);
+  return 0;
+}
+
 void createNewAcc(struct User u) {
   struct Record r;
   struct Record cr;
@@ -181,6 +199,13 @@ void checkAllAccounts(struct User u) {
 }
 
 void updateAccountInformation(struct User u) {
+  if (!doesUserHaveAccounts(u)) {
+    system("clear");
+    printf("\n\t\tNo accounts found for %s. Returning to main menu.\n", u.name);
+    stayOrReturn(1, updateAccountInformation, u);
+    return;
+  }
+
   int accountNbr, choice;
   char newCountry[50];
   int newPhoneNumber;
@@ -256,6 +281,12 @@ void updateAccountInformation(struct User u) {
 }
 
 void checkAccountDetails(struct User u) {
+  if (!doesUserHaveAccounts(u)) {
+    system("clear");
+    printf("\n\t\tNo accounts found for %s. Returning to main menu.\n", u.name);
+    stayOrReturn(1, updateAccountInformation, u);
+    return;
+  }
   int accountNbr;
   struct Record r;
   char userName[50];
@@ -320,6 +351,13 @@ void checkAccountDetails(struct User u) {
 }
 
 void makeTransaction(struct User u) {
+  if (!doesUserHaveAccounts(u)) {
+    system("clear");
+    printf("\n\t\tNo accounts found for %s. Returning to main menu.\n", u.name);
+    stayOrReturn(1, updateAccountInformation, u);
+    return;
+  }
+
   int accountNbr;
   double amount;
   char transactionType[10]; // either "deposit" or "withdraw"
@@ -402,6 +440,13 @@ void makeTransaction(struct User u) {
 }
 
 void removeAccount(struct User u) {
+  if (!doesUserHaveAccounts(u)) {
+    system("clear");
+    printf("\n\t\tNo accounts found for %s. Returning to main menu.\n", u.name);
+    stayOrReturn(1, updateAccountInformation, u);
+    return;
+  }
+
   int accountNbr;
   system("clear");
   printf("\t\t====== Remove Account for %s =====\n\n", u.name);
@@ -460,6 +505,13 @@ void removeAccount(struct User u) {
 }
 
 void transferOwnership(struct User u) {
+  if (!doesUserHaveAccounts(u)) {
+    system("clear");
+    printf("\n\t\tNo accounts found for %s. Returning to main menu.\n", u.name);
+    stayOrReturn(1, updateAccountInformation, u);
+    return;
+  }
+
   int accountNbr, newUserId;
   char newUserName[50];
   struct Record records[MAX_RECORDS];

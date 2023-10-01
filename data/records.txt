@@ -4,9 +4,3 @@
 
 2 1 Michel 123 10/10/2020 UK 1234123 12345.30 savings
 
-3 2 Egon 98 9/30/2023 Estonia 56000001 151.00 savings
-
-4 2 Egon 97 10/10/2002 Estonia 56000002 1023.20 savings
-
-5 2 Egon 96 9/10/2023 Estonia 56000003 1500.00 fixed03
-

@@ -513,7 +513,7 @@ void transferOwnership(struct User u) {
   if (!doesUserHaveAccounts(u)) {
     system("clear");
     printf("\n\t\tNo accounts found for %s. Returning to main menu.\n", u.name);
-    stayOrReturn(1, updateAccountInformation, u);
+    stayOrReturn(1, transferOwnership, u);
     return;
   }
 
@@ -521,9 +521,11 @@ void transferOwnership(struct User u) {
   char newUserName[50];
   struct Record records[MAX_RECORDS];
   int recordCount = 0;
+  int found = 0;
 
   system("clear");
   printf("\t\t====== Transfer Ownership for %s =====\n\n", u.name);
+
   printf("\n\t\tEnter the account number you want to transfer: ");
   scanf("%d", &accountNbr);
 
@@ -533,37 +535,33 @@ void transferOwnership(struct User u) {
     return;
   }
 
-  int hasAccounts = 0;
   while (getAccountFromFile(pf, records[recordCount].name,
                             &records[recordCount])) {
-    if (strcmp(records[recordCount].name, u.name) == 0) {
-      hasAccounts = 1;
+    if (records[recordCount].accountNbr == accountNbr &&
+        strcmp(records[recordCount].name, u.name) == 0) {
+      found = 1;
     }
     recordCount++;
   }
   fclose(pf);
 
-  if (!hasAccounts) {
-    printf("\n\t\tYou have no accounts to transfer.\n");
+  if (!found) {
+    printf("\n\t\tNo account found with account number %d.\n", accountNbr);
     stayOrReturn(0, transferOwnership, u);
     return;
   }
 
-  int found = 0;
+  printf("\n\t\tEnter the username of the new owner: ");
+  scanf("%s", newUserName);
+  newUserId = getUserId(newUserName);
+
   for (int i = 0; i < recordCount; i++) {
     if (records[i].accountNbr == accountNbr &&
         strcmp(records[i].name, u.name) == 0) {
-      found = 1;
-
-      printf("\n\t\tEnter the username of the new owner: ");
-      scanf("%s", newUserName);
-      newUserId = getUserId(newUserName);
-
       records[i].userId = newUserId;
       strcpy(records[i].name, newUserName);
       strcpy(records[i].country, "N/A");
       records[i].phone = 0;
-
       break;
     }
   }
@@ -579,11 +577,6 @@ void transferOwnership(struct User u) {
   }
   fclose(pf);
 
-  if (found) {
-    printf("\n\t\tOwnership successfully transferred.\n");
-    success(u);
-  } else {
-    printf("\n\t\tNo account found with account number %d.\n", accountNbr);
-    stayOrReturn(0, transferOwnership, u);
-  }
+  printf("\n\t\tOwnership successfully transferred.\n");
+  success(u);
 }

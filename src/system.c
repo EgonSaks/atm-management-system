@@ -434,6 +434,24 @@ void makeTransaction(struct User u) {
     return;
   }
 
+  char *restrictedAccountTypes[] = {"fixed01", "fixed02", "fixed03"};
+  for (int i = 0; i < recordCount; i++) {
+    if (records[i].accountNbr == accountNbr &&
+        strcmp(records[i].name, u.name) == 0) {
+
+      for (int j = 0; j < 3; ++j) {
+        if (strcmp(records[i].accountType, restrictedAccountTypes[j]) == 0) {
+          printf("\n\t\t✖ Accounts of type %s are not allowed to make "
+                 "transactions.\n",
+                 records[i].accountType);
+          stayOrReturn(0, makeTransaction, u);
+          return;
+        }
+      }
+      break;
+    }
+  }
+
   printf("\n\t\tEnter the transaction type (deposit/withdraw): ");
   scanf("%s", transactionType);
 

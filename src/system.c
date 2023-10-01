@@ -51,14 +51,14 @@ void stayOrReturn(int notGood, void f(struct User u), struct User u) {
 void success(struct User u) {
   int option;
 
-  while (1) { 
+  while (1) {
     printf("\n\t\tEnter 1 to go to the main menu and 0 to exit! \n\n");
     scanf("%d", &option);
     system("clear");
 
     if (option == 1) {
       mainMenu(u);
-      break; 
+      break;
     } else if (option == 0) {
       exit(1);
     } else {
@@ -83,8 +83,7 @@ int getUserId(const char *username) {
   }
 
   fclose(fp);
-  printf("\n\t\tUser not found!\n\n");
-  exit(1);
+  return -1;
 }
 
 int doesUserHaveAccounts(struct User u) {
@@ -582,6 +581,12 @@ void transferOwnership(struct User u) {
   printf("\n\t\tEnter the username of the new owner: ");
   scanf("%s", newUserName);
   newUserId = getUserId(newUserName);
+
+  if (newUserId == -1) {
+    printf("\n\t\tNew owner not found.\n");
+    stayOrReturn(0, transferOwnership, u);
+    return;
+  }
 
   for (int i = 0; i < recordCount; i++) {
     if (records[i].accountNbr == accountNbr &&

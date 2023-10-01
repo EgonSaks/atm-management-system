@@ -25,8 +25,6 @@ void updateUserAccountInFile(FILE *ptr, struct Record r) {
 void stayOrReturn(int notGood, void f(struct User u), struct User u) {
   int option;
   if (notGood == 0) {
-    system("clear");
-    printf("\n\t\t✖ Record not found!!\n");
   invalid:
     printf(
         "\n\t\tEnter 0 to try again, 1 to return to main menu and 2 to exit:");
@@ -56,7 +54,7 @@ void stayOrReturn(int notGood, void f(struct User u), struct User u) {
 
 void success(struct User u) {
   int option;
-  printf("\n\t\t✔ Success!\n");
+
 invalid:
   printf("\n\t\tEnter 1 to go to the main menu and 0 to exit!\n\n");
   scanf("%d", &option);
@@ -148,6 +146,7 @@ noAccount:
   saveAccountToFile(pf, u, r);
 
   fclose(pf);
+  printf("\n\t\t✔ Success!\n");
   success(u);
 }
 
@@ -311,4 +310,86 @@ void checkAccountDetails(struct User u) {
   printf("\n\t\tYou will get $%.2f as interest on day %d of every month.\n",
          interest, r.deposit.day);
   success(u);
+}
+
+void makeTransaction(struct User u) {
+  int accountNbr;
+  double amount;
+  char transactionType[10]; // either "deposit" or "withdraw"
+
+  system("clear");
+  printf("\t\t====== Make Transaction for %s =====\n\n", u.name);
+  printf("\n\t\tEnter the account number for the transaction: ");
+  scanf("%d", &accountNbr);
+
+  struct Record records[MAX_RECORDS];
+  int recordCount = 0;
+
+  FILE *pf = fopen(RECORDS, "r");
+  if (pf == NULL) {
+    perror("\n\t\tFailed to open file");
+    return;
+  }
+
+  while (getAccountFromFile(pf, records[recordCount].name,
+                            &records[recordCount])) {
+    recordCount++;
+  }
+  fclose(pf);
+
+  int found = 0;
+  for (int i = 0; i < recordCount; i++) {
+    if (records[i].accountNbr == accountNbr &&
+        strcmp(records[i].name, u.name) == 0) {
+      if (strcmp(records[i].accountType, "fixed01") == 0 ||
+          strcmp(records[i].accountType, "fixed02") == 0 ||
+          strcmp(records[i].accountType, "fixed03") == 0) {
+        printf("\n\t\t✖ Transactions are not allowed for fixed accounts!\n");
+        stayOrReturn(0, makeTransaction, u);
+        return;
+      }
+
+      printf("\n\t\tEnter the transaction type (deposit/withdraw): ");
+      scanf("%s", transactionType);
+      printf("\n\t\tEnter the amount: ");
+      scanf("%lf", &amount);
+
+      if (strcmp(transactionType, "withdraw") == 0) {
+        if (records[i].amount < amount) {
+          printf("\n\t\t✖ Not enough balance for withdrawal.\n");
+          stayOrReturn(0, makeTransaction, u);
+          return;
+        }
+        records[i].amount -= amount;
+      } else if (strcmp(transactionType, "deposit") == 0) {
+        records[i].amount += amount;
+      } else {
+        printf("\n\t\t✖ Invalid transaction type.\n");
+        stayOrReturn(0, makeTransaction, u);
+        return;
+      }
+
+      found = 1;
+      break;
+    }
+  }
+
+  pf = fopen(RECORDS, "w");
+  if (pf == NULL) {
+    perror("\n\t\tFailed to open file");
+    return;
+  }
+
+  for (int i = 0; i < recordCount; i++) {
+    updateUserAccountInFile(pf, records[i]);
+  }
+  fclose(pf);
+
+  if (found) {
+    printf("\n\t\t✔ Transaction successful.\n");
+    success(u);
+  } else {
+    printf("\n\t\t✖ No account found with account number %d.\n", accountNbr);
+    stayOrReturn(0, makeTransaction, u);
+  }
 }

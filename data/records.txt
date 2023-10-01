@@ -6,7 +6,7 @@
 
 3 2 Egon 99 9/30/2023 est 56000000 1000000.00 current
 
-4 2 Egon 98 9/30/2023 Estonia 56000100 1.00 savings
+4 2 Egon 98 9/30/2023 Estonia 56000100 151.00 savings
 
 5 2 Egon 97 10/10/2002 Estonia 56000002 1023.20 savings
 

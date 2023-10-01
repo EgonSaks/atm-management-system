@@ -63,7 +63,6 @@ void initMenu(struct User *u) {
       if (strcmp(u->password, getPassword(*u)) == 0) {
       } else {
         printf("\n\t\tWrong password or username\n");
-        // exit(1);
         handleFailedLogin(u);
       }
       r = 1;

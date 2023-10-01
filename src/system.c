@@ -362,16 +362,18 @@ void makeTransaction(struct User u) {
   if (!doesUserHaveAccounts(u)) {
     system("clear");
     printf("\n\t\tNo accounts found for %s. Returning to main menu.\n", u.name);
-    stayOrReturn(1, updateAccountInformation, u);
+    stayOrReturn(1, makeTransaction, u);
     return;
   }
 
   int accountNbr;
   double amount;
   char transactionType[10]; // either "deposit" or "withdraw"
+  int found = 0;
 
   system("clear");
   printf("\t\t====== Make Transaction for %s =====\n\n", u.name);
+
   printf("\n\t\tEnter the account number for the transaction: ");
   scanf("%d", &accountNbr);
 
@@ -386,27 +388,29 @@ void makeTransaction(struct User u) {
 
   while (getAccountFromFile(pf, records[recordCount].name,
                             &records[recordCount])) {
+    if (records[recordCount].accountNbr == accountNbr &&
+        strcmp(records[recordCount].name, u.name) == 0) {
+      found = 1;
+    }
     recordCount++;
   }
   fclose(pf);
 
-  int found = 0;
+  if (!found) {
+    printf("\n\t\t✖ No account found with account number %d.\n", accountNbr);
+    stayOrReturn(0, makeTransaction, u);
+    return;
+  }
+
+  printf("\n\t\tEnter the transaction type (deposit/withdraw): ");
+  scanf("%s", transactionType);
+
+  printf("\n\t\tEnter the amount: ");
+  scanf("%lf", &amount);
+
   for (int i = 0; i < recordCount; i++) {
     if (records[i].accountNbr == accountNbr &&
         strcmp(records[i].name, u.name) == 0) {
-      if (strcmp(records[i].accountType, "fixed01") == 0 ||
-          strcmp(records[i].accountType, "fixed02") == 0 ||
-          strcmp(records[i].accountType, "fixed03") == 0) {
-        printf("\n\t\t✖ Transactions are not allowed for fixed accounts!\n");
-        stayOrReturn(0, makeTransaction, u);
-        return;
-      }
-
-      printf("\n\t\tEnter the transaction type (deposit/withdraw): ");
-      scanf("%s", transactionType);
-      printf("\n\t\tEnter the amount: ");
-      scanf("%lf", &amount);
-
       if (strcmp(transactionType, "withdraw") == 0) {
         if (records[i].amount < amount) {
           printf("\n\t\t✖ Not enough balance for withdrawal.\n");
@@ -421,8 +425,6 @@ void makeTransaction(struct User u) {
         stayOrReturn(0, makeTransaction, u);
         return;
       }
-
-      found = 1;
       break;
     }
   }
@@ -438,13 +440,8 @@ void makeTransaction(struct User u) {
   }
   fclose(pf);
 
-  if (found) {
-    printf("\n\t\t✔ Transaction successful.\n");
-    success(u);
-  } else {
-    printf("\n\t\t✖ No account found with account number %d.\n", accountNbr);
-    stayOrReturn(0, makeTransaction, u);
-  }
+  printf("\n\t\t✔ Transaction successful.\n");
+  success(u);
 }
 
 void removeAccount(struct User u) {

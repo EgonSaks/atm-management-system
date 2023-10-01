@@ -292,9 +292,10 @@ void checkAccountDetails(struct User u) {
   if (!doesUserHaveAccounts(u)) {
     system("clear");
     printf("\n\t\tNo accounts found for %s. Returning to main menu.\n", u.name);
-    stayOrReturn(1, updateAccountInformation, u);
+    stayOrReturn(1, checkAccountDetails, u);
     return;
   }
+
   int accountNbr;
   struct Record r;
   char userName[50];
@@ -317,7 +318,6 @@ void checkAccountDetails(struct User u) {
       break;
     }
   }
-
   fclose(pf);
 
   if (!found) {
@@ -342,8 +342,8 @@ void checkAccountDetails(struct User u) {
   } else if (strcmp(r.accountType, "fixed03") == 0) {
     interestRate = 0.08;
   } else if (strcmp(r.accountType, "current") == 0) {
-    printf("\n\t\tYou will not get interests because the account is of "
-           "type current\n");
+    printf("\n\t\tYou will not get interests because the account is of type "
+           "current\n");
     success(u);
     return;
   } else {
@@ -455,7 +455,7 @@ void removeAccount(struct User u) {
   int accountNbr;
   struct Record records[MAX_RECORDS];
   int recordCount = 0;
-  int found = 0; 
+  int found = 0;
 
   system("clear");
   printf("\t\t====== Remove Account for %s =====\n\n", u.name);

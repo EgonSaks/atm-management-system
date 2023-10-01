@@ -1,9 +1,12 @@
 #include "header.h"
 #include <termios.h>
 
+#define MAX_USERNAME_SIZE 50
+#define MAX_PASSWORD_SIZE 50
+
 char *USERS = "./data/users.txt";
 
-void loginMenu(char a[50], char pass[50]) {
+void loginMenu(char a[MAX_USERNAME_SIZE], char pass[MAX_PASSWORD_SIZE]) {
   struct termios oflags, nflags;
 
   system("clear");
@@ -74,7 +77,7 @@ int isUsernameUnique(char username[]) {
   return 1;
 }
 
-void registerMenu(char a[50], char pass[50]) {
+void registerMenu(char a[MAX_USERNAME_SIZE], char pass[MAX_PASSWORD_SIZE]) {
   struct termios oflags, nflags;
 
   system("clear");
@@ -144,10 +147,10 @@ void handleFailedLogin(struct User *u) {
     scanf("%d", &option);
 
     if (option == 0) {
-      initMenu(u); 
+      initMenu(u);
       break;
     } else if (option == 1) {
-      exit(1); 
+      exit(1);
       break;
     } else {
       printf("Insert a valid operation!\n");

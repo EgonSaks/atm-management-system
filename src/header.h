@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX_USERNAME_SIZE 50
+#define MAX_PASSWORD_SIZE 50
+#define MAX_COUNTRY_SIZE 100
+#define MAX_TRANSACTION_TYPE_SIZE 10
+
 struct Date {
   int month, day, year;
 };
@@ -10,10 +15,10 @@ struct Date {
 struct Record {
   int id;
   int userId;
-  char name[100];
-  char country[100];
+  char name[MAX_USERNAME_SIZE];
+  char country[MAX_COUNTRY_SIZE];
   int phone;
-  char accountType[10];
+  char accountType[MAX_TRANSACTION_TYPE_SIZE];
   int accountNbr;
   double amount;
   struct Date deposit;
@@ -22,14 +27,14 @@ struct Record {
 
 struct User {
   int id;
-  char name[50];
-  char password[50];
+  char name[MAX_USERNAME_SIZE];
+  char password[MAX_PASSWORD_SIZE];
 };
 
 // authentication functions
 void initMenu(struct User *u);
-void loginMenu(char a[50], char pass[50]);
-void registerMenu(char a[50], char pass[50]);
+void loginMenu(char a[MAX_USERNAME_SIZE], char pass[MAX_PASSWORD_SIZE]);
+void registerMenu(char a[MAX_USERNAME_SIZE], char pass[MAX_PASSWORD_SIZE]);
 const char *getPassword(struct User u);
 
 // system function

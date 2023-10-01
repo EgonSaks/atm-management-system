@@ -1,9 +1,16 @@
 #include "header.h"
 
 #define MAX_RECORDS 100
+#define MAX_USERNAME_SIZE 50
+#define MAX_PASSWORD_SIZE 50
+#define MAX_ID_SIZE 5
+#define MAX_COUNTRY_SIZE 100
+#define MAX_TRANSACTION_TYPE_SIZE 10
+
 const char *RECORDS = "./data/records.txt";
 
-int getAccountFromFile(FILE *ptr, char name[50], struct Record *r) {
+int getAccountFromFile(FILE *ptr, char name[MAX_USERNAME_SIZE],
+                       struct Record *r) {
   return fscanf(ptr, "%d %d %s %d %d/%d/%d %s %d %lf %s", &r->id, &r->userId,
                 name, &r->accountNbr, &r->deposit.month, &r->deposit.day,
                 &r->deposit.year, r->country, &r->phone, &r->amount,
@@ -74,7 +81,7 @@ int getUserId(const char *username) {
     exit(1);
   }
 
-  char id[5], name[50], pass[50];
+  char id[MAX_ID_SIZE], name[MAX_USERNAME_SIZE], pass[MAX_PASSWORD_SIZE];
   while (fscanf(fp, "%s %s %s", id, name, pass) != EOF) {
     if (strcmp(name, username) == 0) {
       fclose(fp);
@@ -93,7 +100,7 @@ int doesUserHaveAccounts(struct User u) {
     perror("\n\t\tFailed to open file");
     return 0;
   }
-  char userName[50];
+  char userName[MAX_USERNAME_SIZE];
   while (getAccountFromFile(pf, userName, &r)) {
     if (strcmp(userName, u.name) == 0) {
       fclose(pf);
@@ -107,7 +114,7 @@ int doesUserHaveAccounts(struct User u) {
 void createNewAccount(struct User u) {
   struct Record r;
   struct Record cr;
-  char userName[50];
+  char userName[MAX_USERNAME_SIZE];
   FILE *pf = fopen(RECORDS, "a+");
   FILE *rf = fopen(RECORDS, "r");
 
@@ -193,7 +200,7 @@ void checkAllAccounts(struct User u) {
 
   int accountsFound = 0;
   struct Record r;
-  char userName[50];
+  char userName[MAX_USERNAME_SIZE];
 
   system("clear");
   printf("\t\t====== All accounts for %s =====\n\n", u.name);
@@ -231,7 +238,7 @@ void updateAccountInformation(struct User u) {
   }
 
   int accountNbr, choice;
-  char newCountry[50];
+  char newCountry[MAX_COUNTRY_SIZE];
   int newPhoneNumber;
   int found = 0;
 
@@ -322,7 +329,7 @@ void checkAccountDetails(struct User u) {
 
   int accountNbr;
   struct Record r;
-  char userName[50];
+  char userName[MAX_USERNAME_SIZE];
   int found = 0;
 
   system("clear");
@@ -392,7 +399,8 @@ void makeTransaction(struct User u) {
 
   int accountNbr;
   double amount;
-  char transactionType[10]; // either "deposit" or "withdraw"
+  char transactionType[MAX_TRANSACTION_TYPE_SIZE]; // either "deposit" or
+                                                   // "withdraw"
   int found = 0;
 
   system("clear");
@@ -545,7 +553,7 @@ void transferOwnership(struct User u) {
   }
 
   int accountNbr, newUserId;
-  char newUserName[50];
+  char newUserName[MAX_USERNAME_SIZE];
   struct Record records[MAX_RECORDS];
   int recordCount = 0;
   int found = 0;

@@ -26,8 +26,8 @@ void stayOrReturn(int notGood, void f(struct User u), struct User u) {
   int option;
   if (notGood == 0) {
   invalid:
-    printf(
-        "\n\t\tEnter 0 to try again, 1 to return to main menu and 2 to exit:");
+    printf("\n\t\tEnter 0 to try again, 1 to return to main menu and 2 to "
+           "exit! \n\n");
     scanf("%d", &option);
     if (option == 0)
       f(u);
@@ -40,7 +40,7 @@ void stayOrReturn(int notGood, void f(struct User u), struct User u) {
       goto invalid;
     }
   } else {
-    printf("\n\t\tEnter 1 to go to the main menu and 0 to exit:");
+    printf("\n\t\tEnter 1 to go to the main menu and 0 to exit! \n\n");
     scanf("%d", &option);
   }
   if (option == 1) {
@@ -56,7 +56,7 @@ void success(struct User u) {
   int option;
 
 invalid:
-  printf("\n\t\tEnter 1 to go to the main menu and 0 to exit!\n\n");
+  printf("\n\t\tEnter 1 to go to the main menu and 0 to exit! \n\n");
   scanf("%d", &option);
   system("clear");
   if (option == 1) {

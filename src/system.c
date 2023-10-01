@@ -24,32 +24,28 @@ void updateUserAccountInFile(FILE *ptr, struct Record r) {
 
 void stayOrReturn(int notGood, void f(struct User u), struct User u) {
   int option;
-  if (notGood == 0) {
-  invalid:
-    printf("\n\t\tEnter 0 to try again, 1 to return to main menu and 2 to "
-           "exit! \n\n");
-    scanf("%d", &option);
-    if (option == 0)
-      f(u);
-    else if (option == 1)
-      mainMenu(u);
-    else if (option == 2)
-      exit(0);
-    else {
-      printf("Insert a valid operation!\n");
-      goto invalid;
+  do {
+    if (notGood == 0) {
+      printf("\n\t\tEnter 0 to try again, 1 to return to main menu and 2 to "
+             "exit! \n\n");
+    } else {
+      printf("\n\t\tEnter 1 to go to the main menu and 0 to exit! \n\n");
     }
-  } else {
-    printf("\n\t\tEnter 1 to go to the main menu and 0 to exit! \n\n");
+
     scanf("%d", &option);
-  }
-  if (option == 1) {
-    system("clear");
-    mainMenu(u);
-  } else {
-    system("clear");
-    exit(1);
-  }
+
+    if (option == 0) {
+      f(u);
+      break;
+    } else if (option == 1) {
+      mainMenu(u);
+      break;
+    } else if (option == 2) {
+      exit(0);
+    } else {
+      printf("Insert a valid operation!\n");
+    }
+  } while (option < 0 || option > 2);
 }
 
 void success(struct User u) {
@@ -142,7 +138,7 @@ void createNewAccount(struct User u) {
 
     while (getAccountFromFile(pf, userName, &cr)) {
       if (strcmp(userName, u.name) == 0 && cr.accountNbr == r.accountNbr) {
-        printf("\n\t\t✖ This Account already exists for this user\n\n");
+        printf("\n\t\t✖ This Account already exists for this user\n");
         accountExists = 1;
         break;
       }

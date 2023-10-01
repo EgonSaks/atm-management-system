@@ -448,18 +448,19 @@ void removeAccount(struct User u) {
   if (!doesUserHaveAccounts(u)) {
     system("clear");
     printf("\n\t\tNo accounts found for %s. Returning to main menu.\n", u.name);
-    stayOrReturn(1, updateAccountInformation, u);
+    stayOrReturn(1, removeAccount, u);
     return;
   }
 
   int accountNbr;
+  struct Record records[MAX_RECORDS];
+  int recordCount = 0;
+  int found = 0; 
+
   system("clear");
   printf("\t\t====== Remove Account for %s =====\n\n", u.name);
   printf("\n\t\tEnter the account number you wish to remove: ");
   scanf("%d", &accountNbr);
-
-  struct Record records[MAX_RECORDS];
-  int recordCount = 0;
 
   FILE *pf = fopen(RECORDS, "r");
   if (pf == NULL) {
@@ -469,27 +470,29 @@ void removeAccount(struct User u) {
 
   while (getAccountFromFile(pf, records[recordCount].name,
                             &records[recordCount])) {
+    if (records[recordCount].accountNbr == accountNbr &&
+        strcmp(records[recordCount].name, u.name) == 0) {
+      found = 1;
+    }
     recordCount++;
   }
   fclose(pf);
 
-  int found = 0;
+  if (!found) {
+    printf("\n\t\tNo account found with account number %d.\n", accountNbr);
+    stayOrReturn(0, removeAccount, u);
+    return;
+  }
+
   for (int i = 0; i < recordCount; i++) {
     if (records[i].accountNbr == accountNbr &&
         strcmp(records[i].name, u.name) == 0) {
-      found = 1;
       for (int j = i; j < recordCount - 1; j++) {
         records[j] = records[j + 1];
       }
       recordCount--;
       break;
     }
-  }
-
-  if (!found) {
-    printf("\n\t\tNo account found with account number %d.\n", accountNbr);
-    stayOrReturn(0, removeAccount, u);
-    return;
   }
 
   pf = fopen(RECORDS, "w");

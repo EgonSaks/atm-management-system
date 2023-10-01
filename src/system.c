@@ -210,7 +210,7 @@ void updateAccountInformation(struct User u) {
       found = 1;
       switch (choice) {
       case 1:
-        printf("\n\n\t\tEnter new phone number: ");
+        printf("\n\t\tEnter new phone number: ");
         scanf("%d", &newPhoneNumber);
         records[i].phone = newPhoneNumber;
         break;
@@ -240,7 +240,7 @@ void updateAccountInformation(struct User u) {
   fclose(pf);
 
   if (found) {
-    printf("\n\n\n\t\tAccount information updated successfully.\n");
+    printf("\n\t\tAccount information updated successfully.\n");
     success(u);
   } else {
     printf("\n\t\tNo account found with account number %d.\n", accountNbr);

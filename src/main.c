@@ -17,7 +17,7 @@ void mainMenu(struct User u) {
 
   switch (option) {
   case 1:
-    createNewAcc(u);
+    createNewAccount(u);
     break;
   case 2:
     updateAccountInformation(u);

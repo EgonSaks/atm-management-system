@@ -107,12 +107,12 @@ int doesUserHaveAccounts(struct User u) {
   return 0;
 }
 
-void createNewAcc(struct User u) {
+void createNewAccount(struct User u) {
   struct Record r;
   struct Record cr;
   char userName[50];
   FILE *pf = fopen(RECORDS, "a+");
-  FILE *rf = fopen("./data/records.txt", "r");
+  FILE *rf = fopen(RECORDS, "r");
 
   if (!rf) {
     perror("\n\t\tError opening file");
@@ -126,46 +126,58 @@ void createNewAcc(struct User u) {
 
   fclose(rf);
 
-noAccount:
-  system("clear");
-  printf("\t\t\t===== New record =====\n");
+  do {
+    system("clear");
+    printf("\t\t\t===== New record =====\n");
 
-  printf("\n\t\tEnter today's date(mm/dd/yyyy): ");
-  scanf("%d/%d/%d", &r.deposit.month, &r.deposit.day, &r.deposit.year);
+    printf("\n\t\tEnter today's date(mm/dd/yyyy): ");
+    scanf("%d/%d/%d", &r.deposit.month, &r.deposit.day, &r.deposit.year);
 
-  printf("\n\t\tEnter the account number: ");
-  scanf("%d", &r.accountNbr);
+    printf("\n\t\tEnter the account number: ");
+    scanf("%d", &r.accountNbr);
 
-  while (getAccountFromFile(pf, userName, &cr)) {
-    if (strcmp(userName, u.name) == 0 && cr.accountNbr == r.accountNbr) {
-      printf("\n\t\t✖ This Account already exists for this user\n\n");
-      goto noAccount;
+    int accountExists = 0;
+
+    rewind(pf);
+
+    while (getAccountFromFile(pf, userName, &cr)) {
+      if (strcmp(userName, u.name) == 0 && cr.accountNbr == r.accountNbr) {
+        printf("\n\t\t✖ This Account already exists for this user\n\n");
+        accountExists = 1;
+        break;
+      }
     }
-  }
 
-  r.id = lastRecordId + 1;
-  u.id = getUserId(u.name);
-  printf("\n\t\tEnter the country: ");
-  scanf("%s", r.country);
+    if (accountExists) {
+      fclose(pf);
+      stayOrReturn(0, createNewAccount, u);
+    } else {
+      r.id = lastRecordId + 1;
+      u.id = getUserId(u.name);
+      printf("\n\t\tEnter the country: ");
+      scanf("%s", r.country);
 
-  printf("\n\t\tEnter the phone number: ");
-  scanf("%d", &r.phone);
+      printf("\n\t\tEnter the phone number: ");
+      scanf("%d", &r.phone);
 
-  printf("\n\t\tEnter amount to deposit: $");
-  scanf("%lf", &r.amount);
+      printf("\n\t\tEnter amount to deposit: $");
+      scanf("%lf", &r.amount);
 
-  printf("\n\t\tChoose the type of account:\n\n\t\t -> savings\n\t\t -> "
-         "current\n\t\t -> "
-         "fixed01(for 1 year)\n\t\t -> fixed02(for 2 years)\n\t\t -> "
-         "fixed03(for 3 "
-         "years)\n\n\t\tEnter your choice: ");
-  scanf("%s", r.accountType);
+      printf("\n\t\tChoose the type of account:\n\n\t\t -> savings\n\t\t -> "
+             "current\n\t\t -> fixed01(for 1 year)\n\t\t -> fixed02(for 2 "
+             "years)\n\t\t -> "
+             "fixed03(for 3 "
+             "years)\n\n\t\tEnter your choice: ");
+      scanf("%s", r.accountType);
 
-  saveAccountToFile(pf, u, r);
+      saveAccountToFile(pf, u, r);
 
-  fclose(pf);
-  printf("\n\t\t✔ Success!\n");
-  success(u);
+      fclose(pf);
+      printf("\n\t\t✔ Success!\n");
+      success(u);
+      break;
+    }
+  } while (1);
 }
 
 void checkAllAccounts(struct User u) {

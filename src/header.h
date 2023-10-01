@@ -32,7 +32,7 @@ void registerMenu(char a[50], char pass[50]);
 const char *getPassword(struct User u);
 
 // system function
-void createNewAcc(struct User u);
+void createNewAccount(struct User u);
 void mainMenu(struct User u);
 void checkAllAccounts(struct User u);
 void updateAccountInformation(struct User u);

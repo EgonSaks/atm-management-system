@@ -363,29 +363,38 @@ void checkAccountDetails(struct User u) {
          r.accountNbr, r.deposit.day, r.deposit.month, r.deposit.year,
          r.country, r.phone, r.amount, r.accountType);
 
-  double interestRate;
+  double rate;
   if (strcmp(r.accountType, "savings") == 0) {
-    interestRate = 0.07;
+    rate = 0.07;
+    double interest = r.amount * (1 + rate / 12) - r.amount;
+    printf("\n\t\tYou will get $%.2f as interest on day %d of every month.\n",
+           interest, r.deposit.day);
   } else if (strcmp(r.accountType, "fixed01") == 0) {
-    interestRate = 0.04;
+    rate = 0.04;
+    double interest = r.amount * (1 + rate / 12) - r.amount;
+    interest *= 12;
+    printf("\n\t\tYou will get $%.2f as interest on %d/%d/%d.\n", interest,
+           r.deposit.month, r.deposit.day, r.deposit.year + 1);
   } else if (strcmp(r.accountType, "fixed02") == 0) {
-    interestRate = 0.05;
+    rate = 0.05;
+    double interest = r.amount * (1 + rate / 12) - r.amount;
+    interest *= 24;
+    printf("\n\t\tYou will get $%.2f as interest on %d/%d/%d.\n", interest,
+           r.deposit.month, r.deposit.day, r.deposit.year + 2);
   } else if (strcmp(r.accountType, "fixed03") == 0) {
-    interestRate = 0.08;
+    rate = 0.08;
+    double interest = r.amount * (1 + rate / 12) - r.amount;
+    interest *= 36;
+    printf("\n\t\tYou will get $%.2f as interest on %d/%d/%d.\n", interest,
+           r.deposit.month, r.deposit.day, r.deposit.year + 3);
   } else if (strcmp(r.accountType, "current") == 0) {
     printf("\n\t\tYou will not get interests because the account is of type "
            "current\n");
-    success(u);
-    return;
   } else {
     printf("\n\t\tInvalid account type.\n");
     stayOrReturn(0, checkAccountDetails, u);
     return;
   }
-
-  double interest = r.amount * interestRate / 12;
-  printf("\n\t\tYou will get $%.2f as interest on day %d of every month.\n",
-         interest, r.deposit.day);
   success(u);
 }
 
@@ -399,8 +408,8 @@ void makeTransaction(struct User u) {
 
   int accountNbr;
   double amount;
-  char transactionType[MAX_TRANSACTION_TYPE_SIZE]; // either "deposit" or
-                                                   // "withdraw"
+  char transactionType[MAX_TRANSACTION_TYPE_SIZE];
+
   int found = 0;
 
   system("clear");

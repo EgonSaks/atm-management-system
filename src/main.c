@@ -10,7 +10,7 @@ void mainMenu(struct User u) {
   printf("\n\t\t[2]- Update account information\n");
   printf("\n\t\t[3]- Check accounts\n");
   printf("\n\t\t[4]- Check list of owned account\n");
-  printf("\n\t\t[5]- Make Transaction\n");
+  printf("\n\t\t[5]- Make transaction\n");
   printf("\n\t\t[6]- Remove existing account\n");
   printf("\n\t\t[7]- Transfer ownership\n");
   printf("\n\t\t[8]- Exit\n\n\n");

@@ -43,6 +43,7 @@ void mainMenu(struct User u) {
     break;
   default:
     printf("Invalid operation!\n");
+    exit(1);
   }
 };
 
@@ -76,6 +77,7 @@ void initMenu(struct User *u) {
       break;
     default:
       printf("Insert a valid operation!\n");
+      exit(1);
     }
   }
 };

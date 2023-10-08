@@ -4,6 +4,8 @@
 
 ATM System is a C-based application designed to simulate the functionalities of an Automated Teller Machine. It offers a range of features including user registration, account management, and transactional operations, aimed to provide a comprehensive experience for users.
 
+![atm-system](/img/atm-system.webp)
+
 ## Packages
 
 - **Language**: C
